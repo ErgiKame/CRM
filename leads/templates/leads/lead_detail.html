@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport"
@@ -23,5 +23,9 @@
     <hr />
     <h1>This is the details of {{ lead.first_name }}</h1>
     <p> This persons age: {{ lead.age }} </p>
+    <p> The person associated with this lead is: {{ lead.agent }} </p>
+    <hr />
+    <a href="/leads/{{ lead.pk }}/update/">Update</a>
+    <a href="/leads/{{ lead.pk }}/delete/">Delete</a>
 </body>
 </html>
