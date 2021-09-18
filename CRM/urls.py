@@ -16,7 +16,8 @@ Including another URLconf
 from django.conf.urls.i18n import i18n_patterns
 from django.contrib import admin
 from django.urls import path, include
-from leads.views import lead_list, landing_page, LandingPageView
+from leads.views import lead_list, landing_page, LandingPageView, SignupView
+from django.contrib.auth.views import LoginView, LogoutView
 
 from django.conf import settings
 from django.conf.urls.static import static
@@ -24,7 +25,10 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', LandingPageView.as_view(), name='landing-page'),
-    path('leads/', include('leads.urls', namespace="leads"))
+    path('leads/', include('leads.urls', namespace="leads")),
+    path('signup/', SignupView.as_view(), name='signup'),
+    path('login/', LoginView.as_view(), name='login'),
+    path('logout/', LogoutView.as_view(), name='logout'),
 ]
 
 # This is how we reference static files using settings values that we set on settings.py
