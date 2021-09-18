@@ -131,3 +131,6 @@ STATIC_ROOT = "static_root"
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'leads.User'
+
+# In production we use smtp instead of console and we provide credentials
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
