@@ -7,6 +7,12 @@ from django.contrib.auth.models import AbstractUser
 class User(AbstractUser):
     pass
 
+class UserProfile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.user.username
+
 class Lead(models.Model):
 
     # SOURCE_CHOICES = (
@@ -34,6 +40,7 @@ class Lead(models.Model):
 class Agent(models.Model):
     # Every agent has its own user
     user = models.OneToOneField(User, on_delete=models.CASCADE)
+    organisation = models.ForeignKey(UserProfile, on_delete=models.CASCADE, default=None)
 
     def __str__(self):
         return self.user.username

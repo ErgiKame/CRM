@@ -4,6 +4,7 @@ from .models import Lead, Agent
 from .forms import LeadForm, LeadModelForm, CustomUserCreationForm
 from django.views.generic import TemplateView, ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.core.mail import send_mail
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 
 # Create your views here.
@@ -29,7 +30,7 @@ def landing_page(request):
     return render(request, "landing.html")
 
 # CLASS BASED
-class LeadListView(ListView):
+class LeadListView(LoginRequiredMixin, ListView):
     #Provide django the template name
     template_name = "leads/lead_list.html"
     #Provide django the queryset
