@@ -5,6 +5,7 @@ from .forms import LeadForm, LeadModelForm, CustomUserCreationForm
 from django.views.generic import TemplateView, ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.core.mail import send_mail
 from django.contrib.auth.mixins import LoginRequiredMixin
+from agents.mixins import OrganiserAndLoginRequiredMixin
 
 
 # Create your views here.
@@ -66,7 +67,7 @@ def lead_detail(request, pk):
     return render(request, "leads/lead_detail.html", context)
 
 
-class LeadCreateView(CreateView):
+class LeadCreateView(OrganiserAndLoginRequiredMixin, CreateView):
     template_name = "leads/lead_create.html"
     # DOESN'T NEED QUERYSET. WE NEED TO PASS FORM CLASS
     form_class = LeadModelForm
@@ -103,7 +104,7 @@ def lead_create(request):
     return render(request, "leads/lead_create.html", context)
 
 
-class LeadUpdateView(UpdateView):
+class LeadUpdateView(OrganiserAndLoginRequiredMixin, UpdateView):
     template_name = "leads/lead_update.html"
     # NEEDS A QUERYSET AND FORM CLASS
     queryset = Lead.objects.all()
