@@ -35,7 +35,6 @@ class LeadListView(LoginRequiredMixin, ListView):
     #Provide django the template name
     template_name = "leads/lead_list.html"
     #Provide django the queryset
-    queryset = Lead.objects.all()
 
     #Just like the function based views but it automatically passes the context in return
     #Less code to write
@@ -43,6 +42,27 @@ class LeadListView(LoginRequiredMixin, ListView):
     # KEEP IN MIND! queryset default key for context is object_list (replace on html mappings)
     # WE CAN CUSTOMIZE BY USING context_object_name
     context_object_name = "leads"
+
+    def get_queryset(self):
+        user = self.request.user
+
+        # Initial queryset of leads for the entire organisation
+        if user.is_organiser:
+            queryset = Lead.objects.filter(
+                organisation=user.userprofile,
+                agent__isnull=False)
+        else:
+            queryset = Lead.objects.filter(
+                organisation=user.agent.organisation,
+                agent__isnull=False
+            )
+            # Filter for the agent that is logged in
+            queryset = queryset.filter(agent__user=user)
+
+
+
+        # Filtering doesnt add extra queries to the database
+        return queryset
 
 # FUNCTION BASED
 def lead_list(request):
@@ -107,7 +127,11 @@ def lead_create(request):
 class LeadUpdateView(OrganiserAndLoginRequiredMixin, UpdateView):
     template_name = "leads/lead_update.html"
     # NEEDS A QUERYSET AND FORM CLASS
-    queryset = Lead.objects.all()
+    def get_queryset(self):
+        user = self.request.user
+        # initial queryset of leads for the entire organisation
+        return Lead.objects.filter(organisation=user.userprofile)
+
     form_class = LeadModelForm
 
     # After form completed successfully we
@@ -138,7 +162,10 @@ def lead_update(request,pk):
 class LeadDeleteView(DeleteView):
     template_name = "leads/lead_delete.html"
     # NEEDS A QUERYSET ONLY
-    queryset = Lead.objects.all()
+    def get_queryset(self):
+        user = self.request.user
+        # initial queryset of leads for the entire organisation
+        return Lead.objects.filter(organisation=user.userprofile)
 
     # NEED SUCCESS URL ALSO
     def get_success_url(self):
