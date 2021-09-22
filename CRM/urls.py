@@ -16,7 +16,7 @@ Including another URLconf
 from django.conf.urls.i18n import i18n_patterns
 from django.contrib import admin
 from django.urls import path, include
-from leads.views import lead_list, landing_page, LandingPageView, SignupView
+from leads.views import lead_list, landing_page, LandingPageView, SignupView, DashboardView
 from django.contrib.auth.views import LoginView, LogoutView, PasswordResetView , PasswordResetDoneView, PasswordResetConfirmView, PasswordResetCompleteView
 
 from django.conf import settings
@@ -25,6 +25,7 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', LandingPageView.as_view(), name='landing-page'),
+    path('dashboard/', DashboardView.as_view(), name='dashboard'),
     path('leads/', include('leads.urls', namespace="leads")),
     path('agents/', include('agents.urls', namespace="agents")),
     path('signup/', SignupView.as_view(), name='signup'),
@@ -40,3 +41,4 @@ urlpatterns = [
 # In production we upload static files on Amazon S3 or other service providers
 if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

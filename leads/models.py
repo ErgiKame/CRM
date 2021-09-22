@@ -29,6 +29,7 @@ class Lead(models.Model):
     # So we can filter by organisation later
     organisation = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
     agent = models.ForeignKey("Agent", null=True, blank=True, on_delete=models.SET_NULL)
+    category = models.ForeignKey("Category", related_name="leads", null=True, blank=True, on_delete=models.SET_NULL)
 
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
@@ -39,6 +40,17 @@ class Lead(models.Model):
     #
     # profile_picture = models.ImageField(blank=True, null=True)
     # special_files = models.FileField()
+def handle_upload_follow_ups(instance, filename):
+    return f"lead_followups/lead_{instance.lead.pk}/{filename}"
+
+class FollowUp(models.Model):
+    lead = models.ForeignKey(Lead, related_name="followups", on_delete=models.CASCADE)
+    date_added = models.DateTimeField(auto_now_add=True)
+    notes = models.TextField(blank=True, null=True)
+    file = models.FileField(null=True, blank=True, upload_to=handle_upload_follow_ups)
+
+    def __str__(self):
+        return f"{self.lead.first_name} {self.lead.last_name}"
 
 
 class Agent(models.Model):
@@ -48,6 +60,13 @@ class Agent(models.Model):
 
     def __str__(self):
         return self.user.username
+
+class Category(models.Model):
+    name = models.CharField(max_length=30)  # New, Contacted, Converted, Unconverted
+    organisation = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.name
 
 # In this case instance is User that is being sent. Created = tells us if model was created. False if its just saved.
 def post_user_created_signal(sender, instance, created, **kwargs):
