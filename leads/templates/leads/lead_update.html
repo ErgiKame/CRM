@@ -34,23 +34,4 @@
   </div>
 </section>
 
-    <a href="{% url 'leads:lead-list' %}">Go back to leads</a>
-    <hr />
-    <h1>This is the details of {{ lead.first_name }}</h1>
-    <p> This persons age: {{ lead.age }} </p>
-    <p> The person associated with this lead is: {{ lead.agent }} </p>
-    <hr />
-    <a href="{% url 'leads:lead-update' lead.pk %}">Update</a>
-    <a href="{% url 'leads:lead-delete' lead.pk %}">Delete</a>
-
-
-
-    <a href="{% url 'leads:lead-list' %}">Go back to leads</a>
-    <hr />
-    <h1>Update lead: {{ lead.first_name }} {{ lead.last_name }}</h1>
-    <form method="post" action=".">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Submit</button>
-    </form>
 {% endblock content %}
